@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Mini Postman</string>
+    <string name="history">History</string>
+    <string name="home">Home</string>
+    <string name="pick_http_type">Pick HTTP type</string>
+    <string name="get">GET</string>
+    <string name="post">POST</string>
+    <string name="headers">Headers</string>
+    <string name="add_headers">Add Headers</string>
+    <string name="enter_json_body">Enter json body</string>
+    <string name="create_request">Create Request</string>
+</resources>
