@@ -9,4 +9,7 @@
     <string name="add_headers">Add Headers</string>
     <string name="enter_json_body">Enter json body</string>
     <string name="create_request">Create Request</string>
+    <string name="request_info">Request Info</string>
+    <string name="response_info">Response Info</string>
+    <string name="request_result">Request Result</string>
 </resources>

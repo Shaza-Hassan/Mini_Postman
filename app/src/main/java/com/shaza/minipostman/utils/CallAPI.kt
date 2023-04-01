@@ -2,7 +2,7 @@ package com.shaza.minipostman.utils
 
 import android.os.AsyncTask
 import android.util.Log
-import com.shaza.minipostman.home.model.HttpRequestType
+import com.shaza.minipostman.shared.HttpRequestType
 import com.shaza.minipostman.shared.HttpResponse
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -47,7 +47,7 @@ class CallAPI(
         if (res_code == HttpURLConnection.HTTP_OK) {
             delegate!!.processFinish(result)
         } else {
-            delegate!!.processFailed(res_code, result)
+            delegate!!.processFailed(result)
         }
     }
 
@@ -117,13 +117,13 @@ class CallAPI(
                 httpRequestType = httpRequestType,
                 url = requestURL!!,
                 elapsedTime = elapsedTime,
-                responseCode = responseCode,
+                statusCode = responseCode,
                 response = response,
                 error = error,
                 queryParams = conn.url.query,
-                bodyRequest = null,
-                requestHeaders = headers,
-                responseHeaders = responseHeader
+                bodyRequest = body,
+                requestHeaders = headers.toString(),
+                responseHeaders = responseHeader.toString()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -133,12 +133,12 @@ class CallAPI(
                 httpRequestType = HttpRequestType.GET,
                 url = requestURL!!,
                 elapsedTime = elapsedTime,
-                responseCode = res_code,
+                statusCode = res_code,
                 response = null,
                 error = e.message,
                 queryParams = null,
-                bodyRequest = null,
-                requestHeaders =    headers,
+                bodyRequest = body,
+                requestHeaders = headers.toString(),
                 responseHeaders = null
             )
 

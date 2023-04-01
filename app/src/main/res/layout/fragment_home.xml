@@ -9,7 +9,8 @@
     tools:context=".home.view.HomeFragment"
     android:background="@color/white"
     android:focusable="true"
-    android:clickable="true">
+    android:clickable="true"
+    >
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/home_toolbar"

@@ -9,13 +9,17 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import com.shaza.minipostman.R
 import com.shaza.minipostman.databinding.FragmentHomeBinding
+import com.shaza.minipostman.history.view.HistoryFragment
 import com.shaza.minipostman.home.model.Header
-import com.shaza.minipostman.home.model.HttpRequestType
+import com.shaza.minipostman.shared.HttpRequestType
 import com.shaza.minipostman.home.view.adapter.AddHeaderAdapter
 import com.shaza.minipostman.home.view.adapter.OnRemoveHeader
 import com.shaza.minipostman.home.viewmodel.HomeViewModel
+import com.shaza.minipostman.response.view.ResponseFragment
 import com.shaza.minipostman.shared.HttpResponse
 import com.shaza.minipostman.utils.HTTPCallback
 import com.shaza.minipostman.utils.hideKeyboardFrom
@@ -34,7 +38,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -61,6 +65,19 @@ class HomeFragment : Fragment() {
         onUrlEditTextChange()
 
         onBodyEditTextChange()
+
+        binding.homeToolbar.setOnMenuItemClickListener{
+            when(it.itemId){
+                R.id.history_menu_item -> {
+                    val fragment: Fragment = HistoryFragment()
+                    val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction().add(R.id.main_layout, fragment)
+                        .addToBackStack("").commit()
+                }
+            }
+
+            true
+        }
     }
 
     private fun onAddHeaderButtonClicked(){
@@ -121,19 +138,26 @@ class HomeFragment : Fragment() {
         }
         override fun processFinish(output: HttpResponse?) {
             showData()
-            Log.v(this@HomeFragment::class.java.simpleName,output.toString())
+            navigateToResultScreen(output)
         }
 
-        override fun processFailed(responseCode: Int, output: HttpResponse?) {
+        override fun processFailed(output: HttpResponse?) {
             showData()
-            Log.e(this@HomeFragment::class.java.simpleName,responseCode.toString())
-            Log.e(this@HomeFragment::class.java.simpleName,output.toString())
+            navigateToResultScreen(output)
         }
+    }
 
+    private fun navigateToResultScreen(output:HttpResponse?){
+        if (output != null){
+            viewModel.addRequestToDB(requireContext(),output)
+            val fragment: Fragment = ResponseFragment.newInstance(output)
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            fragmentManager.beginTransaction().add(R.id.main_layout, fragment)
+                .addToBackStack("").commit()
+        }
     }
 
     private fun showLoading() {
-
         binding.loading.visibility = VISIBLE
         binding.createRequest.visibility = GONE
         binding.homeScroll.visibility = GONE
