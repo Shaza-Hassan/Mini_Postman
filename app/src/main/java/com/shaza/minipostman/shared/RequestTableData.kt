@@ -3,18 +3,16 @@ package com.shaza.minipostman.shared
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.Cursor
-import com.shaza.minipostman.shared.HttpRequestType.GET
-import com.shaza.minipostman.shared.HttpRequestType.POST
 
 object RequestTableData {
     const val REQUEST_TABLE = "request_table"
-    private const val COLUMN_ID = "_id"
+    const val COLUMN_ID = "_id"
     private const val COLUMN_URL = "url"
-    private const val COLUMN_REQUEST_TYPE = "type"
+    const val COLUMN_REQUEST_TYPE = "type"
     private const val COLUMN_STATUS_CODE = "status_code"
-    private const val COLUMN_TIME = "time"
-    private const val COLUMN_RESPONSE = "response"
-    private const val COLUMN_ERROR = "error"
+    const val COLUMN_TIME = "time"
+    const val COLUMN_RESPONSE = "response"
+    const val COLUMN_ERROR = "error"
     private const val COLUMN_QUERY_PARAMS = "query_params"
     private const val COLUMN_BODY_REQUEST = "body_request"
     private const val COLUMN_REQUEST_HEADERS = "request_headers"
@@ -24,12 +22,7 @@ object RequestTableData {
     private const val TEXT = "TEXT"
     private const val INTEGER_NOT_NULL = "INTEGER NOT NULL"
 
-    const val QUERY_TO_GET_ALL_REQUEST = "SELECT * FROM $REQUEST_TABLE ORDER BY $COLUMN_ID ASC"
-    const val QUERY_TO_GET_ALL_REQUEST_SORTED_BY_TIME = "SELECT * FROM $REQUEST_TABLE ORDER BY $COLUMN_TIME ASC"
-    val QUERY_TO_GET_ALL_GET_REQUEST = "SELECT * FROM $REQUEST_TABLE WHERE $COLUMN_REQUEST_TYPE = ${GET.name}"
-    val QUERY_TO_GET_ALL_POST_REQUEST = "SELECT * FROM $REQUEST_TABLE WHERE $COLUMN_REQUEST_TYPE = ${POST.name}"
-    val QUERY_TO_GET_ALL_SUCCESS_REQUEST = "SELECT * FROM $REQUEST_TABLE WHERE $COLUMN_RESPONSE IS NOT NULL AND $COLUMN_ERROR IS NULL"
-    val QUERY_TO_GET_ALL_FAILED_REQUEST = "SELECT * FROM $REQUEST_TABLE WHERE $COLUMN_RESPONSE IS NULL AND $COLUMN_ERROR IS NOT NULL"
+    private const val QUERY_TO_GET_ALL_REQUEST = "SELECT * FROM $REQUEST_TABLE"
 
     fun createRequestTableQuery() = "CREATE TABLE $REQUEST_TABLE (" +
                     "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
@@ -93,4 +86,22 @@ object RequestTableData {
         }
         return requests
     }
+
+    fun getRequests(whereClause: List<WhereClauses>, sortedBy: OrderClauses?): String {
+        var whereString = ""
+        for (where in whereClause) {
+            if (whereString.isNotEmpty())
+                whereString += " AND "
+            else
+                whereString += "WHERE "
+            whereString += where.clauses
+        }
+
+        var orderString = ""
+        if (sortedBy != null) {
+            orderString += "ORDER BY ${sortedBy.entity} ${sortedBy.sortingCriteria}"
+        }
+        return "$QUERY_TO_GET_ALL_REQUEST $whereString $orderString"
+    }
+
 }

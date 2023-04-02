@@ -5,34 +5,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shaza.minipostman.history.model.HistoryRepo
 import com.shaza.minipostman.shared.HttpResponse
+import com.shaza.minipostman.shared.OrderClauses
+import com.shaza.minipostman.shared.WhereClauses
 
 class HistoryViewModel : ViewModel() {
     val repo: HistoryRepo = HistoryRepo()
 
     val requests = MutableLiveData<MutableList<HttpResponse>>()
 
+    val filter: MutableList<WhereClauses> = mutableListOf()
+    var orderClauses:OrderClauses = OrderClauses.OrderById
+
     fun getAllRequests(context: Context){
-        requests.value = repo.getAllRequests(context)
+        filter.removeAll { it == WhereClauses.GetAllRequest }
+        requests.value = repo.getAllRequests(context,filter,orderClauses)
     }
 
-    fun getAllGETRequests(context: Context){
-        requests.value = repo.getAllGetRequests(context)
+    fun updateRequestType(whereClauses: WhereClauses){
+        filter.removeAll {
+            it == WhereClauses.GetAllPOSTRequest || it == WhereClauses.GetAllGETRequest
+        }
+        filter.add(whereClauses)
     }
 
-    fun getAllPostRequests(context: Context){
-        requests.value = repo.getAllPostRequests(context)
+    fun updateRequestStatus(whereClauses: WhereClauses){
+        filter.removeAll {
+            it == WhereClauses.GetAllSuccessRequest || it == WhereClauses.GetAllFailedRequest
+        }
+        filter.add(whereClauses)
     }
-
-    fun getAllRequestsSortedByTime(context: Context){
-        requests.value = repo.getAllRequestsSortedByTime(context)
-    }
-
-    fun getAllSuccessRequests(context: Context){
-        requests.value = repo.getAllSucceedRequests(context)
-    }
-
-    fun getAllFailedRequests(context: Context){
-        requests.value = repo.getAllFailedRequests(context)
-    }
-
 }

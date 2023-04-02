@@ -12,4 +12,7 @@
     <string name="request_info">Request Info</string>
     <string name="response_info">Response Info</string>
     <string name="request_result">Request Result</string>
+    <string name="all">All</string>
+    <string name="succeed">Succeed</string>
+    <string name="failed">Failed</string>
 </resources>

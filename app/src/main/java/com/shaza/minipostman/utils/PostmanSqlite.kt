@@ -6,8 +6,11 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.shaza.minipostman.shared.HttpResponse
+import com.shaza.minipostman.shared.OrderClauses
 import com.shaza.minipostman.shared.RequestTableData
+import com.shaza.minipostman.shared.WhereClauses
 
 class PostmanSqlite private constructor(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
@@ -27,49 +30,11 @@ class PostmanSqlite private constructor(context: Context) : SQLiteOpenHelper(con
     }
 
     @SuppressLint("Recycle")
-    fun getAllRequests(): MutableList<HttpResponse>{
+    fun getAllRequests(whereClause: List<WhereClauses>, sortedBy: OrderClauses?): MutableList<HttpResponse>{
         val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_REQUEST,null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllRequestsSortedByTime(): MutableList<HttpResponse>{
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_REQUEST_SORTED_BY_TIME,null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllGetRequests(): MutableList<HttpResponse>{
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_GET_REQUEST,null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllPostRequest(): MutableList<HttpResponse>{
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_POST_REQUEST,null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllSuccessRequest(): MutableList<HttpResponse>{
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_SUCCESS_REQUEST,null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllFailedRequest(): MutableList<HttpResponse>{
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(RequestTableData.QUERY_TO_GET_ALL_FAILED_REQUEST,null)
+        val query = RequestTableData.getRequests(whereClause, sortedBy)
+        Log.v(this::class.java.simpleName,query)
+        val cursor = db.rawQuery(query,null)
         val requests = RequestTableData.getRequestDataFromCursor(cursor)
         return requests
     }
