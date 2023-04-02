@@ -9,7 +9,7 @@ import com.shaza.minipostman.shared.HttpResponse
 class ResponseViewModel : ViewModel() {
     var response: HttpResponse? = null
 
-    fun extractArgument(bundle: Bundle?){
+    fun extractArgument(bundle: Bundle?) {
         bundle?.let { bundle ->
             response = when (Build.VERSION.SDK_INT) {
                 Build.VERSION_CODES.TIRAMISU -> {

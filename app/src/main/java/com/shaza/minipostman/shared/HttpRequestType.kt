@@ -4,11 +4,11 @@ enum class HttpRequestType {
     GET,
     POST;
 
-    companion object{
-        fun getType(type:String): HttpRequestType{
-            return when(type){
+    companion object {
+        fun getType(type: String): HttpRequestType {
+            return when (type) {
                 GET.name -> {
-                   GET
+                    GET
                 }
                 POST.name -> {
                     POST

@@ -3,7 +3,6 @@ package com.shaza.minipostman.response.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -11,11 +10,12 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.shaza.minipostman.R
 import com.shaza.minipostman.databinding.FragmentResponseBinding
-import com.shaza.minipostman.shared.HttpRequestType
 import com.shaza.minipostman.response.viewmodel.ResponseViewModel
+import com.shaza.minipostman.shared.HttpRequestType
 import com.shaza.minipostman.shared.HttpResponse
 
 class ResponseFragment : Fragment() {
@@ -24,10 +24,10 @@ class ResponseFragment : Fragment() {
         const val RESPONSE_KEY = "RESPONSE_KEY"
         fun newInstance() = ResponseFragment()
 
-        fun newInstance(httpResponse:HttpResponse) : ResponseFragment{
+        fun newInstance(httpResponse: HttpResponse): ResponseFragment {
             val fragment = ResponseFragment()
             val bundle = Bundle()
-            bundle.putParcelable(RESPONSE_KEY,httpResponse)
+            bundle.putParcelable(RESPONSE_KEY, httpResponse)
             fragment.arguments = bundle
             return fragment
         }
@@ -39,7 +39,7 @@ class ResponseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentResponseBinding.inflate(inflater,container,false)
+        binding = FragmentResponseBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -51,16 +51,16 @@ class ResponseFragment : Fragment() {
         initListener()
     }
 
-    private fun initListener(){
+    private fun initListener() {
         binding.responseToolbar.setNavigationOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
-    private fun handleShowRequestResult(){
+    private fun handleShowRequestResult() {
         requestBasicInfo()
-        setSpannableText(viewModel.response?.url ?: "","URL: ",binding.requestUrl)
+        setSpannableText(viewModel.response?.url ?: "", "URL: ", binding.requestUrl)
         handleShowRequestQueryParams()
         handleShowRequestHeaders()
         handleShowRequestBody()
@@ -77,7 +77,7 @@ class ResponseFragment : Fragment() {
                 binding.responseHeader
             )
         } else {
-            hideView(binding.requestHeaders)
+            hideView(binding.responseHeader)
         }
     }
 
@@ -140,8 +140,16 @@ class ResponseFragment : Fragment() {
 
     private fun requestBasicInfo() {
         setRequestTypeData()
-        setSpannableText(viewModel.response?.statusCode.toString(), "Status code: ", binding.requestResponseBasicInfo.requestStatusCode)
-        setSpannableText(viewModel.response?.elapsedTime.toString(), "Time: ", binding.requestResponseBasicInfo.requestTime)
+        setSpannableText(
+            viewModel.response?.statusCode.toString(),
+            "Status code: ",
+            binding.requestResponseBasicInfo.requestStatusCode
+        )
+        setSpannableText(
+            viewModel.response?.elapsedTime.toString(),
+            "Time: ",
+            binding.requestResponseBasicInfo.requestTime
+        )
     }
 
     private fun setRequestTypeData() {
@@ -155,7 +163,7 @@ class ResponseFragment : Fragment() {
             }
     }
 
-    private fun setSpannableText(normalText:String,boldText:String,textView: TextView){
+    private fun setSpannableText(normalText: String, boldText: String, textView: TextView) {
         val s = SpannableStringBuilder()
             .bold { append(boldText) }
             .append(normalText)
@@ -163,11 +171,11 @@ class ResponseFragment : Fragment() {
         textView.text = s
     }
 
-    private fun showView(view: View){
+    private fun showView(view: View) {
         view.visibility = VISIBLE
     }
 
-    private fun hideView(view: View){
+    private fun hideView(view: View) {
         view.visibility = GONE
     }
 }

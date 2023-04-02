@@ -14,21 +14,21 @@ class HistoryViewModel : ViewModel() {
     val requests = MutableLiveData<MutableList<HttpResponse>>()
 
     val filter: MutableList<WhereClauses> = mutableListOf()
-    var orderClauses:OrderClauses = OrderClauses.OrderById
+    var orderClauses: OrderClauses = OrderClauses.OrderById
 
-    fun getAllRequests(context: Context){
+    fun getAllRequests(context: Context) {
         filter.removeAll { it == WhereClauses.GetAllRequest }
-        requests.value = repo.getAllRequests(context,filter,orderClauses)
+        requests.value = repo.getAllRequests(context, filter, orderClauses)
     }
 
-    fun updateRequestType(whereClauses: WhereClauses){
+    fun updateRequestType(whereClauses: WhereClauses) {
         filter.removeAll {
             it == WhereClauses.GetAllPOSTRequest || it == WhereClauses.GetAllGETRequest
         }
         filter.add(whereClauses)
     }
 
-    fun updateRequestStatus(whereClauses: WhereClauses){
+    fun updateRequestStatus(whereClauses: WhereClauses) {
         filter.removeAll {
             it == WhereClauses.GetAllSuccessRequest || it == WhereClauses.GetAllFailedRequest
         }

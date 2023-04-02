@@ -15,4 +15,6 @@
     <string name="all">All</string>
     <string name="succeed">Succeed</string>
     <string name="failed">Failed</string>
+    <string name="select_image_to_upload">Select Image to Upload</string>
+    <string name="remove_image">Remove Image</string>
 </resources>

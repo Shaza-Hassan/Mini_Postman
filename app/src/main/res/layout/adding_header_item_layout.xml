@@ -24,7 +24,7 @@
         android:id="@+id/headers"
         android:layout_marginTop="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="6"
+        tools:itemCount="0"
         tools:listitem="@layout/add_header_item_layout"/>
 
     <Button

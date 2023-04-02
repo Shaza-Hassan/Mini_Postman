@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".history.view.HistoryFragment"
     android:focusable="true"
-    android:background="@color/white"
+    android:background="?android:colorBackground"
     android:clickable="true">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -25,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
-        android:clipToPadding="true">
+        android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

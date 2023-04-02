@@ -25,50 +25,51 @@ object RequestTableData {
     private const val QUERY_TO_GET_ALL_REQUEST = "SELECT * FROM $REQUEST_TABLE"
 
     fun createRequestTableQuery() = "CREATE TABLE $REQUEST_TABLE (" +
-                    "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    "$COLUMN_URL $TEXT_NOT_NULL, " +
-                    "$COLUMN_REQUEST_TYPE $TEXT_NOT_NULL, " +
-                    "$COLUMN_STATUS_CODE $INTEGER_NOT_NULL," +
-                    "$COLUMN_TIME $INTEGER_NOT_NULL," +
-                    "$COLUMN_RESPONSE $TEXT," +
-                    "$COLUMN_ERROR $TEXT," +
-                    "$COLUMN_QUERY_PARAMS $TEXT," +
-                    "$COLUMN_BODY_REQUEST $TEXT," +
-                    "$COLUMN_REQUEST_HEADERS $TEXT," +
-                    "$COLUMN_RESPONSE_HEADERS $TEXT)"
+            "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "$COLUMN_URL $TEXT_NOT_NULL, " +
+            "$COLUMN_REQUEST_TYPE $TEXT_NOT_NULL, " +
+            "$COLUMN_STATUS_CODE $INTEGER_NOT_NULL," +
+            "$COLUMN_TIME $INTEGER_NOT_NULL," +
+            "$COLUMN_RESPONSE $TEXT," +
+            "$COLUMN_ERROR $TEXT," +
+            "$COLUMN_QUERY_PARAMS $TEXT," +
+            "$COLUMN_BODY_REQUEST $TEXT," +
+            "$COLUMN_REQUEST_HEADERS $TEXT," +
+            "$COLUMN_RESPONSE_HEADERS $TEXT)"
 
     fun dropRequestTableIfExistQuery() = "DROP TABLE IF EXISTS $REQUEST_TABLE"
 
-    fun addRequestToDB(httpResponse: HttpResponse) : ContentValues{
+    fun addRequestToDB(httpResponse: HttpResponse): ContentValues {
         val values = ContentValues()
-        values.put(COLUMN_URL,httpResponse.url)
-        values.put(COLUMN_REQUEST_TYPE,httpResponse.httpRequestType.name)
-        values.put(COLUMN_STATUS_CODE,httpResponse.statusCode)
-        values.put(COLUMN_TIME,httpResponse.elapsedTime)
-        values.put(COLUMN_RESPONSE,httpResponse.response)
-        values.put(COLUMN_ERROR,httpResponse.error)
-        values.put(COLUMN_QUERY_PARAMS,httpResponse.queryParams)
-        values.put(COLUMN_BODY_REQUEST,httpResponse.bodyRequest)
-        values.put(COLUMN_REQUEST_HEADERS,httpResponse.requestHeaders)
-        values.put(COLUMN_RESPONSE_HEADERS,httpResponse.responseHeaders)
+        values.put(COLUMN_URL, httpResponse.url)
+        values.put(COLUMN_REQUEST_TYPE, httpResponse.httpRequestType.name)
+        values.put(COLUMN_STATUS_CODE, httpResponse.statusCode)
+        values.put(COLUMN_TIME, httpResponse.elapsedTime)
+        values.put(COLUMN_RESPONSE, httpResponse.response)
+        values.put(COLUMN_ERROR, httpResponse.error)
+        values.put(COLUMN_QUERY_PARAMS, httpResponse.queryParams)
+        values.put(COLUMN_BODY_REQUEST, httpResponse.bodyRequest)
+        values.put(COLUMN_REQUEST_HEADERS, httpResponse.requestHeaders)
+        values.put(COLUMN_RESPONSE_HEADERS, httpResponse.responseHeaders)
         return values
     }
 
     @SuppressLint("Range")
-    fun getRequestDataFromCursor(cursor:Cursor): MutableList<HttpResponse>{
+    fun getRequestDataFromCursor(cursor: Cursor): MutableList<HttpResponse> {
         val requests = mutableListOf<HttpResponse>()
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 val url = cursor.getString(cursor.getColumnIndex(COLUMN_URL))
                 val type = cursor.getString(cursor.getColumnIndex(COLUMN_REQUEST_TYPE))
-                val statusCode= cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS_CODE))
+                val statusCode = cursor.getInt(cursor.getColumnIndex(COLUMN_STATUS_CODE))
                 val time = cursor.getInt(cursor.getColumnIndex(COLUMN_TIME))
                 val response = cursor.getString(cursor.getColumnIndex(COLUMN_RESPONSE))
                 val error = cursor.getString(cursor.getColumnIndex(COLUMN_ERROR))
                 val queryParams = cursor.getString(cursor.getColumnIndex(COLUMN_QUERY_PARAMS))
                 val bodyRequest = cursor.getString(cursor.getColumnIndex(COLUMN_BODY_REQUEST))
                 val requestHeader = cursor.getString(cursor.getColumnIndex(COLUMN_REQUEST_HEADERS))
-                val responseHeader = cursor.getString(cursor.getColumnIndex(COLUMN_RESPONSE_HEADERS))
+                val responseHeader =
+                    cursor.getString(cursor.getColumnIndex(COLUMN_RESPONSE_HEADERS))
                 val httpResponse = HttpResponse(
                     url = url,
                     httpRequestType = HttpRequestType.getType(type),
@@ -82,7 +83,7 @@ object RequestTableData {
                     requestHeaders = requestHeader
                 )
                 requests.add(httpResponse)
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
         return requests
     }

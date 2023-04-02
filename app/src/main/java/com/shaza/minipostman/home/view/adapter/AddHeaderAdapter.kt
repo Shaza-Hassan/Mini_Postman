@@ -1,19 +1,18 @@
 package com.shaza.minipostman.home.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.shaza.minipostman.R
 import com.shaza.minipostman.databinding.AddHeaderItemLayoutBinding
 import com.shaza.minipostman.home.model.Header
-import java.security.AccessController.getContext
 
-class AddHeaderAdapter(val headers: MutableList<Header>, val onRemoveHeader: OnRemoveHeader) : RecyclerView.Adapter<AddHeaderAdapter.AddHeaderViewHolder>() {
+class AddHeaderAdapter(val headers: MutableList<Header>, val onRemoveHeader: OnRemoveHeader) :
+    RecyclerView.Adapter<AddHeaderAdapter.AddHeaderViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddHeaderViewHolder {
-        val binding = AddHeaderItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            AddHeaderItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AddHeaderViewHolder(binding)
     }
 
@@ -29,8 +28,9 @@ class AddHeaderAdapter(val headers: MutableList<Header>, val onRemoveHeader: OnR
         }
     }
 
-    class AddHeaderViewHolder(val binding: AddHeaderItemLayoutBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bindView(header: Header){
+    class AddHeaderViewHolder(val binding: AddHeaderItemLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindView(header: Header) {
             itemView.apply {
                 binding.headerTitleEditText.doOnTextChanged { text, start, before, count ->
                     header.title = text.toString()
@@ -44,6 +44,6 @@ class AddHeaderAdapter(val headers: MutableList<Header>, val onRemoveHeader: OnR
     }
 }
 
-interface OnRemoveHeader{
-    fun onRemoveHeader(index:Int)
+interface OnRemoveHeader {
+    fun onRemoveHeader(index: Int)
 }

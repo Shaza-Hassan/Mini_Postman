@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".response.view.ResponseFragment"
-    android:background="@color/white"
+    android:background="?android:colorBackground"
     android:focusable="true"
     android:clickable="true">
 
@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="16dp"
-        android:clipToPadding="true">
+        android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/response_layout"
@@ -45,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 android:text="@string/request_info"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/request_response_basic_info" />
 
@@ -93,7 +93,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
                 android:text="@string/response_info"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/body_request" />
 

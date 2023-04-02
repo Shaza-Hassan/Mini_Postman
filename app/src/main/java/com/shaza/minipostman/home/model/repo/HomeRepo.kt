@@ -9,12 +9,20 @@ import com.shaza.minipostman.utils.PostmanSqlite
 
 class HomeRepo {
 
-    fun callAPI(url:String, httpRequestType: HttpRequestType, body:String?, headers:MutableMap<String,String>?, httpCallback: HTTPCallback){
-        val callAPI = CallAPI(requestURL = url,httpRequestType,headers,body,httpCallback)
+    fun callAPI(
+        url: String,
+        httpRequestType: HttpRequestType,
+        body: String?,
+        fileAsByteArray: ByteArray?,
+        headers: MutableMap<String, String>?,
+        httpCallback: HTTPCallback
+    ) {
+        val callAPI =
+            CallAPI(requestURL = url, httpRequestType, headers, body, fileAsByteArray, httpCallback)
         callAPI.execute()
     }
 
-    fun saveRequestInDB(httpResponse: HttpResponse,context: Context){
+    fun saveRequestInDB(httpResponse: HttpResponse, context: Context) {
         PostmanSqlite.getInstance(context).addRequestInDB(httpResponse)
     }
 }
