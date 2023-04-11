@@ -1,5 +1,5 @@
 # Mini_Postman
-This App is using Asynctask to make get/post request
+This App is using Executors to make get/post request
 
 ## The Following Pattern
 We used MVVM pattern while developing
@@ -16,6 +16,6 @@ ViewModel.
 - response pacage -> responsable for show the result of request
 - shared -> contains models that used by different packages
 - utils
-  - contains async task that responsable for calling api
+  - contains Executors that responsable for calling api
   - contains calling for sqlite to store and get request
  
