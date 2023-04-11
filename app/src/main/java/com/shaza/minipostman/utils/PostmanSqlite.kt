@@ -23,25 +23,6 @@ class PostmanSqlite private constructor(context: Context) :
         onCreate(db)
     }
 
-    fun addRequestInDB(httpResponse: HttpResponse) {
-        val values = RequestTableData.addRequestToDB(httpResponse)
-        val db = this.writableDatabase
-        db.insertWithOnConflict(RequestTableData.REQUEST_TABLE, null, values, CONFLICT_REPLACE)
-    }
-
-    @SuppressLint("Recycle")
-    fun getAllRequests(
-        whereClause: List<WhereClauses>,
-        sortedBy: OrderClauses?
-    ): MutableList<HttpResponse> {
-        val db = this.writableDatabase
-        val query = RequestTableData.getRequests(whereClause, sortedBy)
-        Log.v(this::class.java.simpleName, query)
-        val cursor = db.rawQuery(query, null)
-        val requests = RequestTableData.getRequestDataFromCursor(cursor)
-        return requests
-    }
-
     companion object {
         const val DB_NAME = "miniPostman.db"
         const val DB_VERSION = 1

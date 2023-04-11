@@ -68,6 +68,16 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_LONG).show()
             }
         }
+
+        viewModel.navigateToResultScreen.observe(viewLifecycleOwner){
+            if (it){
+                if (viewModel.httpResponse != null){
+                    val fragment: Fragment = ResponseFragment.newInstance(viewModel.httpResponse!!)
+                    val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction().add(R.id.main_layout, fragment).addToBackStack("").commit()
+                }
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -194,10 +204,6 @@ class HomeFragment : Fragment() {
     private fun navigateToResultScreen(output: HttpResponse?) {
         if (output != null) {
             viewModel.addRequestToDB(requireContext(), output)
-            val fragment: Fragment = ResponseFragment.newInstance(output)
-            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction().add(R.id.main_layout, fragment)
-                .addToBackStack("").commit()
         }
     }
 

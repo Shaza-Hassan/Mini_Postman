@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shaza.minipostman.home.model.Header
@@ -14,6 +16,7 @@ import com.shaza.minipostman.shared.HttpResponse
 import com.shaza.minipostman.utils.CheckInternetConnection
 import com.shaza.minipostman.utils.HTTPCallback
 import java.io.ByteArrayOutputStream
+import java.util.concurrent.Executors
 
 class HomeViewModel : ViewModel() {
     val homeRepo: HomeRepo = HomeRepo()
@@ -23,6 +26,8 @@ class HomeViewModel : ViewModel() {
     var body: String? = null
     var requestType = HttpRequestType.GET
     val noInternetConnection = MutableLiveData<Boolean>()
+    val navigateToResultScreen = MutableLiveData<Boolean>()
+    var httpResponse : HttpResponse? = null
     var fileAsByteArray: ByteArray? = null
 
     fun makeRequest(httpCallback: HTTPCallback, context: Context) {
@@ -45,7 +50,15 @@ class HomeViewModel : ViewModel() {
     }
 
     fun addRequestToDB(context: Context, httpResponse: HttpResponse) {
-        homeRepo.saveRequestInDB(httpResponse, context)
+        this.httpResponse = httpResponse
+        val executor = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
+        executor.execute {
+            homeRepo.saveRequestInDB(httpResponse, context)
+            handler.post {
+                navigateToResultScreen.value = true
+            }
+        }
     }
 
     fun compressImage(photoUri: Uri?, context: Context) {

@@ -1,6 +1,7 @@
 package com.shaza.minipostman.utils
 
-import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import com.shaza.minipostman.shared.HttpRequestType
 import com.shaza.minipostman.shared.HttpResponse
 import java.io.BufferedReader
@@ -9,6 +10,7 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 
 class CallAPI(
@@ -17,12 +19,11 @@ class CallAPI(
     headers: Map<String, String>?,
     body: String?,
     fileAsByteArray: ByteArray?,
-    asyncResponse: HTTPCallback?
-) : AsyncTask<String?, Void?, HttpResponse>() {
+    asyncResponse: HTTPCallback?){
     var requestURL = ""
-    var delegate: HTTPCallback? = null //Call back interface
+    private var delegate: HTTPCallback? = null //Call back interface
     private var headers: Map<String, String>? = null
-    private var res_code = 0
+    private var _resCode = 0
     var httpRequestType: HttpRequestType
     var body: String? = null
     var fileAsByteArray: ByteArray? = null
@@ -36,27 +37,29 @@ class CallAPI(
         this.fileAsByteArray = fileAsByteArray
     }
 
-    override fun onPreExecute() {
-        delegate!!.processRunning()
-    }
+    fun makeRequest(){
+        val executor = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
 
-    override fun doInBackground(vararg params: String?): HttpResponse? {
-        if (this.fileAsByteArray != null) {
-            return uploadFile()
-        } else {
-            return performPostCall(requestURL)
+        executor.execute {
+            handler.post {
+                delegate!!.processRunning()
+            }
+
+            val result: HttpResponse = if (this.fileAsByteArray != null) {
+                uploadFile()
+            } else {
+                performPostCall(requestURL)
+            }
+            handler.post {
+                if (_resCode == HttpURLConnection.HTTP_OK) {
+                    delegate!!.processFinish(result)
+                } else {
+                    delegate!!.processFailed(result)
+                }
+            }
         }
     }
-
-    override fun onPostExecute(result: HttpResponse) {
-        //super.onPostExecute(result);
-        if (res_code == HttpURLConnection.HTTP_OK) {
-            delegate!!.processFinish(result)
-        } else {
-            delegate!!.processFailed(result)
-        }
-    }
-
     private fun performPostCall(
         requestURL: String?,
     ): HttpResponse {
@@ -92,7 +95,7 @@ class CallAPI(
             //Connect to our url
             conn.connect()
             statusCode = conn.responseCode
-            res_code = statusCode
+            _resCode = statusCode
             responseHeader = conn.headerFields
             queryParams = conn.url.query
 
@@ -137,7 +140,11 @@ class CallAPI(
                 val br = BufferedReader(InputStreamReader(conn.inputStream))
                 line = br.readLine()
                 while (line != null) {
-                    response1 += line
+                    if (response1 == null){
+                        response1 = line
+                    }else{
+                        response1 += line
+                    }
                     line = br.readLine()
 
                 }
@@ -148,7 +155,11 @@ class CallAPI(
                 val br = BufferedReader(InputStreamReader(conn.errorStream))
                 line = br.readLine()
                 while (line != null) {
-                    error1 += line
+                    if (error1 == null){
+                        error1 = line
+                    }else{
+                        error1 += line
+                    }
                     line = br.readLine()
                 }
                 response1 = null
@@ -227,6 +238,5 @@ class CallAPI(
         }
         return httpResponse
     }
+
 }
-
-
